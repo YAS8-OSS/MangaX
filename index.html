@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MangaX — مانجا بالعربي</title>
+  <meta name="description" content="MangaX — قالب مانجا عربي خفيف يعمل على GitHub Pages بدون باك‑إند. صفحة واحدة فقط مع بحث، قراءة فصول، ومفضلة." />
+  <meta name="keywords" content="مانجا, manga, قراءة مانجا, ترجمة مانجا, MangaX" />
+  <meta name="theme-color" content="#0b0b0f" />
+  
+  <!-- مكان كود AdSense لاحقاً (اختياري). استبدلي YOUR-ADSENSE-CODE هنا عند القبول من جوجل. -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR-ADSENSE-CODE" crossorigin="anonymous"></script> -->
+
+  <style>
+    :root{
+      --bg:#0b0b0f; --soft:#12121a; --muted:#9aa4b2; --text:#e8ecf3; --brand:#7c5cff; --accent:#21c55d; --card:#0f1016; --border:#1f2430;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Noto Kufi Arabic",Tahoma,Arial,sans-serif}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block;border-radius:14px}
+    .container{max-width:1100px;margin:0 auto;padding:18px}
+    header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,rgba(11,11,15,.95),rgba(11,11,15,.75));backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid var(--border)}
+    .nav{display:flex;gap:12px;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800}
+    .logo{width:36px;height:36px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(135deg,var(--brand),#19c3ff)}
+    .logo span{font-weight:900}
+    .search{flex:1;max-width:520px;display:flex;gap:8px;align-items:center;background:var(--soft);border:1px solid var(--border);padding:8px 12px;border-radius:14px}
+    .search input{all:unset;direction:rtl;flex:1}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:14px;background:var(--brand);border:1px solid #6e58f8;color:white;font-weight:700;cursor:pointer}
+    .btn.secondary{background:transparent;border-color:var(--border);color:var(--text)}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    @media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:.2s transform,.2s box-shadow}
+    .card:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .card-body{padding:12px}
+    .badge{display:inline-block;background:var(--soft);border:1px solid var(--border);color:var(--muted);padding:4px 8px;border-radius:999px;font-size:12px}
+    .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+    .section-title{font-size:18px;margin:18px 0 10px}
+    .pillbar{display:flex;gap:10px;flex-wrap:wrap}
+    .pill{background:var(--soft);border:1px solid var(--border);padding:6px 10px;border-radius:999px;font-size:13px;cursor:pointer}
+    .layout{display:grid;gap:18px;grid-template-columns:1fr}
+    @media(min-width:920px){.layout{grid-template-columns:280px 1fr}}
+    .sidebar{position:sticky;top:78px;height:max-content;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px}
+    .list{display:flex;flex-direction:column;gap:8px}
+    .list a{padding:10px 12px;border-radius:10px;background:var(--soft);border:1px solid var(--border)}
+    .ad{display:grid;place-items:center;aspect-ratio:3/1;background:repeating-linear-gradient(45deg,var(--soft),var(--soft) 8px,var(--card) 8px,var(--card) 16px);border:1px dashed var(--border);border-radius:16px;color:var(--muted)}
+    footer{border-top:1px solid var(--border);margin-top:30px}
+    .muted{color:var(--muted)}
+    .reader-img{width:100%;height:auto}
+    .topbar{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:7px 10px;border:1px solid var(--border);border-radius:10px;background:var(--soft);cursor:pointer}
+    .tab.active{background:var(--brand);color:white;border-color:#6e58f8}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#/" class="brand" aria-label="عودة للرئيسية">
+        <div class="logo"><span>𝕏</span></div>
+        <span>MangaX</span>
+      </a>
+
+      <label class="search" aria-label="بحث"><input id="q" placeholder="ابحث عن مانجا…" /><button class="btn secondary" id="clear">مسح</button></label>
+      <nav class="tabs">
+        <a class="tab" href="#/">الرئيسية</a>
+        <a class="tab" href="#/favorites">المفضلة</a>
+        <a class="tab" href="#/about">عن الموقع</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="app" aria-live="polite"></main>
+  <footer class="container muted">© <span id="year"></span> MangaX — قالب صفحة واحدة للعمل على GitHub Pages.
+  </footer>
+
+<script>
+// ===== بيانات تجريبية (عدليها براحتك) =====
+const DB = [
+  {
+    slug: 'shadow-blade',
+    title: 'Blade of Shadows',
+    alt: 'بليد أوف شادوز',
+    cover: 'https://images.unsplash.com/photo-1618336753974-aae8e04506b4?q=80&w=640&auto=format&fit=crop',
+    status: 'مستمرة',
+    tags: ['أكشن','فانتازيا'],
+    summary: 'محارب غامض يعود بقوة السيف المظلم لينتقم من إمبراطورية فاسدة.',
+    chapters: [
+      { no: 1, title: 'البداية المظلمة', pages: [
+        'https://picsum.photos/seed/sb-1/900/1300',
+        'https://picsum.photos/seed/sb-2/900/1300',
+        'https://picsum.photos/seed/sb-3/900/1300'
+      ]},
+      { no: 2, title: 'نصل الانتقام', pages: [
+        'https://picsum.photos/seed/sb-4/900/1300',
+        'https://picsum.photos/seed/sb-5/900/1300'
+      ]}
+    ]
+  },
+  {
+    slug: 'sweet-campus',
+    title: 'Sweet Campus',
+    alt: 'سويت كامبس',
+    cover: 'https://images.unsplash.com/photo-1507908708918-778587c9e563?q=80&w=640&auto=format&fit=crop',
+    status: 'مكتملة',
+    tags: ['رومانسي','مدرسي'],
+    summary: 'قصة حب خفيفة داخل الحرم الجامعي مع الكثير من المواقف الطريفة.',
+    chapters: [
+      { no: 1, title: 'أول لقاء', pages: [
+        'https://picsum.photos/seed/sc-1/900/1300',
+        'https://picsum.photos/seed/sc-2/900/1300'
+      ] }
+    ]
+  }
+];
+
+// ===== أدوات صغيرة =====
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+const state = { q: '', view: 'home', params: [] };
+const favKey = 'mangax:favs';
+const getFavs = () => new Set(JSON.parse(localStorage.getItem(favKey) || '[]'));
+const setFavs = s => localStorage.setItem(favKey, JSON.stringify([...s]));
+
+function slugify(s){return s.toLowerCase().replace(/[^\w\u0600-\u06FF]+/g,'-').replace(/^-+|-+$/g,'');}
+function byQuery(items,q){ if(!q) return items; q=q.trim().toLowerCase(); return items.filter(x=>[x.title,x.alt,x.tags.join(' ')].join(' ').toLowerCase().includes(q)); }
+function findManga(slug){ return DB.find(x=>x.slug===slug); }
+function formatChapterLabel(ch){ return `الفصل ${ch.no}${ch.title? ' — '+ch.title: ''}` }
+
+// ===== واجهات الرسم =====
+function Home(){
+  const list = byQuery(DB, state.q);
+  return `
+    <div class="topbar">
+      <h2>آخر الإضافات</h2>
+      <div class="ad">مساحة إعلانية 728×90</div>
+    </div>
+    <div class="grid">${list.map(Card).join('')}</div>
+  `;
+}
+
+function Card(m){
+  const favs=getFavs();
+  return `
+    <a class="card" href="#/manga/${m.slug}" aria-label="افتح ${m.title}">
+      <img src="${m.cover}" alt="${m.title}" loading="lazy"/>
+      <div class="card-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <strong>${m.title}</strong>
+          <button class="btn secondary" data-fav="${m.slug}" aria-pressed="${favs.has(m.slug)}">${favs.has(m.slug)?'★':'☆'}</button>
+        </div>
+        <div class="meta">
+          <span class="badge">${m.status}</span>
+          ${m.tags.map(t=>`<span class="badge">${t}</span>`).join('')}
+        </div>
+      </div>
+    </a>`;
+}
+
+function MangaPage(slug){
+  const m = findManga(slug);
+  if(!m) return NotFound();
+  const chs = m.chapters.slice().sort((a,b)=>b.no-a.no);
+  return `
+    <div class="layout">
+      <aside class="sidebar">
+        <h3 style="margin-top:0">${m.title}</h3>
+        <p class="muted">${m.summary}</p>
+        <div class="pillbar">${m.tags.map(t=>`<span class="pill">${t}</span>`).join('')}</div>
+        <div class="ad" style="margin-top:12px">إعلان 300×250</div>
+        <div class="section-title">الفصول</div>
+        <div class="list">${chs.map(c=>`<a href="#/read/${m.slug}/${c.no}">${formatChapterLabel(c)}</a>`).join('')}</div>
+      </aside>
+      <section>
+        <img src="${m.cover}" alt="${m.title}"/>
+        <div class="meta" style="margin-top:10px">
+          <span class="badge">الحالة: ${m.status}</span>
+          <span class="badge">عدد الفصول: ${m.chapters.length}</span>
+        </div>
+        <div class="section-title">نبذة</div>
+        <p>${m.summary}</p>
+      </section>
+    </div>
+  `;
+}
+
+function Reader(slug, no){
+  const m=findManga(slug); if(!m) return NotFound();
+  const ch=m.chapters.find(c=>String(c.no)===String(no)); if(!ch) return NotFound();
+  const idx=m.chapters.findIndex(c=>c.no===ch.no);
+  const prev=m.chapters[idx+1]?.no; const next=m.chapters[idx-1]?.no;
+  return `
+    <div class="topbar">
+      <div class="tabs">
+        <a class="tab" href="#/manga/${slug}">عودة للمانجا</a>
+        ${prev?`<a class="tab" href="#/read/${slug}/${prev}">◀ السابق</a>`:''}
+        ${next?`<a class="tab" href="#/read/${slug}/${next}">التالي ▶</a>`:''}
+      </div>
+      <div class="badge">${m.title} — ${formatChapterLabel(ch)}</div>
+    </div>
+    <div class="ad" style="margin-bottom:10px">إعلان 728×90</div>
+    ${ch.pages.map(src=>`<img class="reader-img" src="${src}" alt="صفحة مانجا" loading="lazy"/>`).join('')}
+    <div class="ad" style="margin-top:10px">إعلان 728×90</div>
+  `;
+}
+
+function Favorites(){
+  const favs=getFavs();
+  const list=DB.filter(m=>favs.has(m.slug));
+  if(!list.length) return `<p class="muted">لا توجد عناصر في المفضلة بعد. اضغطي نجمة على أي مانجا لإضافتها.</p>`;
+  return `<div class="grid">${list.map(Card).join('')}</div>`
+}
+
+function About(){
+  return `
+    <h2>عن MangaX</h2>
+    <p>قالب مفتوح المصدر وخفيف يعمل كاملاً من جهة المتصفح، مناسب للنشر على GitHub Pages بدون أي خادم.</p>
+    <ul>
+      <li>إضافة/تعديل المانجا من مصفوفة <code>DB</code> في هذا الملف.</li>
+      <li>رفع صور الفصول على خدمات خارجية (مثل Imgur) أو داخل مجلدات في نفس المستودع.</li>
+      <li>إعلانات: أضيفي كود AdSense ثم قدمي لبرنامج AdSense بعد توفر محتوى كافٍ.</li>
+    </ul>
+  `;
+}
+
+function NotFound(){ return `<p>العنصر المطلوب غير موجود.</p>` }
+
+// ===== Router =====
+function render(){
+  const hash=location.hash||'#/'
+  const [,view,...params]=hash.split('/');
+  state.view=view||''; state.params=params;
+  const app=$('#app');
+  if(view==='' || view==='#' || view===''){ app.innerHTML=Home(); }
+  else if(view==='manga'){ app.innerHTML=MangaPage(params[0]); }
+  else if(view==='read'){ app.innerHTML=Reader(params[0], params[1]); }
+  else if(view==='favorites'){ app.innerHTML=Favorites(); }
+  else if(view==='about'){ app.innerHTML=About(); }
+  else { app.innerHTML=NotFound(); }
+  // wire fav buttons
+  $$('[data-fav]').forEach(btn=>{
+    btn.onclick=()=>{
+      const slug=btn.getAttribute('data-fav');
+      const favs=getFavs();
+      if(favs.has(slug)) favs.delete(slug); else favs.add(slug);
+      setFavs(favs); render();
+    }
+  })
+}
+
+// ===== Search =====
+$('#q').addEventListener('input', e=>{ state.q=e.target.value; render(); });
+$('#clear').addEventListener('click', ()=>{ state.q=''; $('#q').value=''; render(); });
+window.addEventListener('hashchange', render);
+window.addEventListener('load', ()=>{ render(); $('#year').textContent=new Date().getFullYear(); });
+</script>
+</body>
+</html>
